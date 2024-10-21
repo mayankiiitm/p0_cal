@@ -1,5 +1,19 @@
-const { getInstance } = require('../resource/mongo')
+const { getCollection } = require('../resource/mongo')
 
-const collection = getInstance('user')
+const users = getCollection('users')
 
-module.exports = collection
+module.exports = {
+	findByEmail: async (email) => users.findOne({ email }),
+	signup: (user) => users.insertOne(user),
+	approveEmail: (email) => users.findOneAndUpdate(
+		{ email },
+		{
+			$set:
+			{ isEmailApproved: 1, otp: '' },
+		},
+		{
+			returnDocument: 'after',
+			upsert: false,
+		},
+	),
+}

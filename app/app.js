@@ -1,11 +1,17 @@
 const express = require('express')
-const user = require('./model/users')
+const {
+	signup, approveEmail, isUser, login,
+} = require('./action/signup')
 
 const app = express()
+app.use(express.json())
 app.get('/health', async (req, res) => {
-	const data = await user.find({}).toArray()
-	res.send(data)
+	res.send('ok')
 })
+app.get('/user/isuser', isUser)
+app.post('/user', signup)
+app.post('/user/approve', approveEmail)
+app.post('/user/login', login)
 app.listen(4000, () => {
 	console.log('now listening for "requests" on port 4000')
 })

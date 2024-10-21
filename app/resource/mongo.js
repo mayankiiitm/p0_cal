@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb')
+const { MongoClient, Collection } = require('mongodb')
 const conf = require('../config')
 
 const url = conf.mongUrl
@@ -13,10 +13,15 @@ module.exports = {
 		db = client.db(process.env.DB_NAME)
 		return db
 	},
-
-	getInstance: (collection) => {
+	getInstance: () => {
 		if (!db) throw new Error('No db Connection')
-		return collection ? db.collection(collection) : db
+		return db
 	},
+	/**
+	 * Gets a collection from the database.
+	 * @param {string} collection - The name of the collection to retrieve.
+	 * @returns {Collection} The MongoDB collection.
+	 */
+	getCollection: (collection) => module.exports.getInstance().collection(collection),
 
 }
