@@ -2,7 +2,7 @@
   "name": "p0_cal",
   "version": "1.0.0",
   "description": "Welcome to the Harbor take home project. We hope this is a good opportunity for you to showcase your skills.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +17,8 @@
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^4.6.2",
     "globals": "^15.11.0"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
   }
 }
