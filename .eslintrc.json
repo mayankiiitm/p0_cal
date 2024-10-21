@@ -13,6 +13,8 @@
 	  // Customize or override Airbnb rules
 	  "no-console": "off",
 	  "linebreak-style": 0,
-	  "semi":["error","never"]
+	  "semi":["error","never"],
+	  "indent": ["error", "tab"],
+	  "no-tabs":"off"
 	}
   }
