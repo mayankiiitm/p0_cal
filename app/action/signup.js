@@ -2,6 +2,7 @@ const users = require('../model/users')
 const sendMail = require('../helper/sendMail')
 const getOtp = require('../helper/getOtp')
 const { hashPassword, matchPassword } = require('../helper/password')
+const jwt = require('../helper/jwt')
 
 const isUser = async (req, res) => {
 	const { email } = req.query
@@ -39,12 +40,12 @@ const login = async (req, res) => {
 	if (!user) {
 		return res.send({ success: false })
 	}
-	console.log(user.password, password)
 	const match = await matchPassword(password, user.password)
-	if (match) {
-		return res.send({ success: true })
+	if (!match) {
+		return res.send({ success: false })
 	}
-	return res.send({ success: false })
+	const token = jwt.sign({ email: user.email, id: user._id })
+	return res.send({ success: true, token })
 }
 const approveEmail = async (req, res) => {
 	const { email, otp } = req.body
