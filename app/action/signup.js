@@ -44,7 +44,7 @@ const login = async (req, res) => {
 	if (!match) {
 		return res.send({ success: false })
 	}
-	const token = jwt.sign({ email: user.email, id: user._id })
+	const token = jwt.sign({ email: user.email, _id: user._id })
 	return res.send({ success: true, token })
 }
 const approveEmail = async (req, res) => {
