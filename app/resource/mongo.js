@@ -1,8 +1,8 @@
+// eslint-disable-next-line no-unused-vars
 const { MongoClient, Collection } = require('mongodb')
 const conf = require('../config')
 
 const url = conf.mongUrl
-console.log(url)
 let db
 
 module.exports = {
