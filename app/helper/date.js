@@ -33,9 +33,7 @@ const convertTimeSlots = (timeSlots, sourceTimeZone, targetTimeZone) => {
 
 			// Convert to the target time zone
 			const startConverted = startDateTime.setZone(targetTimeZone)
-			console.log({
-				startConverted, startDateTime, date, startTime,
-			})
+
 			const endConverted = endDateTime.setZone(targetTimeZone)
 
 			const startDateKey = startConverted.toISODate() // Start date in target zone
