@@ -3,7 +3,7 @@ const { getCollection } = require('../resource/mongo')
 const users = getCollection('users')
 
 module.exports = {
-	findByEmail: async (email) => users.findOne({ email }),
+	findByEmail: (email) => users.findOne({ email }),
 	signup: (user) => users.insertOne(user),
 	approveEmail: (email) => users.findOneAndUpdate(
 		{ email },
