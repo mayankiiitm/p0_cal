@@ -27,4 +27,5 @@ module.exports = {
 			upsert: false,
 		},
 	),
+	getDefaultSchedule: () => userAvailability.findOne({ isDefault: 1 }),
 }

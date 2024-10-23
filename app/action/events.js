@@ -35,8 +35,24 @@ const getSchedule = async (req, res) => {
 	const availability = makeSchedule(schedule, startDate, endDate, timeZone)
 	return res.send({ success: true, availability })
 }
+const getScheduleOverLap = async (req, res) => {
+	const id = req.params
+	const { startDate, endDate, timeZone } = req.query
+	const [meSchedule, userEvent] = await Promise.all([
+		userAvailability.getDefaultSchedule(),
+		userEvents.getById(id),
+	])
+	const meSlots = makeSchedule(meSchedule, startDate, endDate, timeZone)
+	let { schedule } = userEvent
+	if (userEvent.scheduleId) {
+		schedule = await userAvailability.getById(userEvent.scheduleId)
+	}
+	const eventSlots = makeSchedule(schedule, startDate, endDate, timeZone)
+	res.send({ meSlots, eventSlots })
+}
 module.exports = {
 	create,
 	get,
 	getSchedule,
+	getScheduleOverLap,
 }

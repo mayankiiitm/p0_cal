@@ -23,6 +23,7 @@ authorizedRoute.get('/user/me/availability/:id', availability.get)
 authorizedRoute.post('/user/me/availability/:id/default', availability.makeDefault)
 authorizedRoute.get('/event/:id', events.get)
 authorizedRoute.get('/event/:id/schedule', events.getSchedule)
+authorizedRoute.get('/event/:id/overlap', events.getScheduleOverLap)
 module.exports = {
 	route,
 	authorizedRoute,
