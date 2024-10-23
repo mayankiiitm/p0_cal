@@ -2,10 +2,18 @@ const userEvents = require('../model/userEvents')
 
 const create = async (req, res) => {
 	const {
-		name, duration, dateRange, minNotice, bufferTime,
+		name, duration, dateRange, minNotice, bufferTime, schedule, scheduleId, timeZone,
 	} = req.body
 	const success = await userEvents.create({
-		name, userId: req.user._id, duration, dateRange, minNotice, bufferTime,
+		name,
+		userId: req.user._id,
+		duration,
+		dateRange,
+		minNotice,
+		bufferTime,
+		schedule,
+		scheduleId,
+		timeZone,
 	})
 	res.send({ success: !!success })
 }

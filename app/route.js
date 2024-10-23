@@ -20,6 +20,7 @@ authorizedRoute.get('/user/me', user.me)
 authorizedRoute.post('/event', events.create)
 authorizedRoute.post('/user/me/availability', availability.create)
 authorizedRoute.get('/user/me/availability/:id', availability.get)
+authorizedRoute.post('/user/me/availability/:id/default', availability.makeDefault)
 module.exports = {
 	route,
 	authorizedRoute,
