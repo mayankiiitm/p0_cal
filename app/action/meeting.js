@@ -37,9 +37,7 @@ const bookMeeting = async (req, res) => {
 	return res.send({ success: true, meetingSlot })
 }
 const getMeetings = async (req, res) => {
-	console.log(req.user._id)
 	const meetings = await userMeetings.getByUser(req.user._id)
-	console.log(meetings)
 	res.send({ success: true, meetings })
 }
 
