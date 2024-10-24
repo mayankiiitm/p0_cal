@@ -7,6 +7,7 @@ const {
 const user = require('./action/user')
 const events = require('./action/events')
 const availability = require('./action/availability')
+const meeting = require('./action/meeting')
 
 const route = new express.Router()
 route.get('/user/isuser', isUser)
@@ -24,6 +25,7 @@ authorizedRoute.post('/user/me/availability/:id/default', availability.makeDefau
 authorizedRoute.get('/event/:id', events.get)
 authorizedRoute.get('/event/:id/schedule', events.getSchedule)
 authorizedRoute.get('/event/:id/overlap', events.getScheduleOverLap)
+authorizedRoute.post('/event/:id/book', meeting.bookMeeting)
 module.exports = {
 	route,
 	authorizedRoute,

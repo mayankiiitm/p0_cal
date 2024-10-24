@@ -145,9 +145,21 @@ const findOverlaps = (slot1, slot2) => {
 	return overlaps
 }
 
+const convertTimezone = (sourceDateTime, sourceTimeZone, targetTimeZone) => {
+	const source = DateTime.fromISO(sourceDateTime, { zone: sourceTimeZone })
+	return source.setZone(targetTimeZone).toFormat("yyyy-MM-dd'T'HH:mm")
+}
+const addSecondsToTime = (dateTime, seconds) => {
+	const dt = DateTime.fromFormat(dateTime, 'yyyy-MM-dd\'T\'HH:mm')
+	const updatedDateTime = dt.plus({ seconds })
+	return updatedDateTime.toFormat('yyyy-MM-dd\'T\'HH:mm')
+}
+
 module.exports = {
 	getAvailability,
 	convertTimeSlots,
 	convertDateWithTimeZone,
 	findOverlaps,
+	convertTimezone,
+	addSecondsToTime,
 }
