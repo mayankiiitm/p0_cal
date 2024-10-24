@@ -8,7 +8,7 @@ app.get('/health', async (req, res) => {
 })
 app.use(route.route)
 app.use(route.authorizedRoute)
-const port = process.env.port || 80
+const port = process.env.PORT || 80
 app.listen(port, () => {
 	console.log(`now listening for ${port} on port 4000`)
 })
