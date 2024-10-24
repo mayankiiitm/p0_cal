@@ -97,8 +97,57 @@ const convertDateWithTimeZone = (dateString, sourceTimeZone, targetTimeZone, tim
 
 	return formattedTargetDate
 }
+
+const timeToMinutes = (time) => {
+	const [hours, minutes] = time.split(':').map(Number)
+	return hours * 60 + minutes
+}
+
+const minutesToTime = (minutes) => {
+	const hours = Math.floor(minutes / 60).toString().padStart(2, '0')
+	const mins = (minutes % 60).toString().padStart(2, '0')
+	return `${hours}:${mins}`
+}
+
+// Function to find all overlaps regardless of duration(chatGPT, potential bugs)
+const findOverlaps = (slot1, slot2) => {
+	const overlaps = {}
+	// eslint-disable-next-line no-restricted-syntax
+	for (const date in slot1) {
+		if (slot2[date]) {
+			slot1[date].forEach((meSlot) => {
+				const [meStart, meEnd] = meSlot.split('-').map(timeToMinutes)
+				slot2[date].forEach((eventSlot) => {
+					const [eventStart, eventEnd] = eventSlot.split('-').map(timeToMinutes)
+
+					// Find the overlap between slot1 and slot2
+					const overlapStart = Math.max(meStart, eventStart)
+					const overlapEnd = Math.min(meEnd, eventEnd)
+
+					// Check if there is any overlap
+					if (overlapEnd > overlapStart) {
+						const overlapRange = `${minutesToTime(overlapStart)}-${minutesToTime(overlapEnd)}`
+
+						// Store overlaps in an array for each date
+						if (!overlaps[date]) {
+							overlaps[date] = []
+						}
+
+						// Add unique overlaps
+						if (!overlaps[date].includes(overlapRange)) {
+							overlaps[date].push(overlapRange)
+						}
+					}
+				})
+			})
+		}
+	}
+	return overlaps
+}
+
 module.exports = {
 	getAvailability,
 	convertTimeSlots,
 	convertDateWithTimeZone,
+	findOverlaps,
 }

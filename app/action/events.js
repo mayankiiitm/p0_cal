@@ -1,6 +1,7 @@
 const userAvailability = require('../model/userAvailability')
 const userEvents = require('../model/userEvents')
 const { makeSchedule } = require('./lib/schedule')
+const { findOverlaps } = require('../helper/date')
 
 const create = async (req, res) => {
 	const {
@@ -48,7 +49,8 @@ const getScheduleOverLap = async (req, res) => {
 		schedule = await userAvailability.getById(userEvent.scheduleId)
 	}
 	const eventSlots = makeSchedule(schedule, startDate, endDate, timeZone)
-	res.send({ meSlots, eventSlots })
+	const overlap = findOverlaps(meSlots, eventSlots)
+	res.send({ success: true, overlap })
 }
 module.exports = {
 	create,
