@@ -8,6 +8,6 @@ app.get('/health', async (req, res) => {
 })
 app.use(route.route)
 app.use(route.authorizedRoute)
-app.listen(4000, () => {
+app.listen(process.env.port || 80, () => {
 	console.log('now listening for "requests" on port 4000')
 })
