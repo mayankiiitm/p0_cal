@@ -36,7 +36,20 @@ const bookMeeting = async (req, res) => {
 	})
 	return res.send({ success: true, meetingSlot })
 }
+const getMeetings = async (req, res) => {
+	console.log(req.user._id)
+	const meetings = await userMeetings.getByUser(req.user._id)
+	console.log(meetings)
+	res.send({ success: true, meetings })
+}
+
+const getOneMeeting = async (req, res) => {
+	const meeting = await userMeetings.getById(req.params.id)
+	res.send({ success: true, meeting })
+}
 
 module.exports = {
 	bookMeeting,
+	getMeetings,
+	getOneMeeting,
 }

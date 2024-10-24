@@ -19,6 +19,10 @@ const getAvailability = (data, startDate, endDate) => {
 }
 
 const getAvailabilityWithBooking = (data, startDate, endDate, unavailability) => {
+	if (!unavailability) {
+		// eslint-disable-next-line no-param-reassign
+		unavailability = []
+	}
 	const result = {}
 	const end = new Date(endDate)
 	const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']

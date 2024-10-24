@@ -26,6 +26,8 @@ authorizedRoute.get('/event/:id', events.get)
 authorizedRoute.get('/event/:id/schedule', events.getSchedule)
 authorizedRoute.get('/event/:id/overlap', events.getScheduleOverLap)
 authorizedRoute.post('/event/:id/book', meeting.bookMeeting)
+authorizedRoute.get('/me/meeting', meeting.getMeetings)
+authorizedRoute.get('/meeting/:id', meeting.getOneMeeting)
 module.exports = {
 	route,
 	authorizedRoute,

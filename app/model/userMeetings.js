@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 const { getCollection } = require('../resource/mongo')
 
 const userMeetings = getCollection('userMeetings')
@@ -28,4 +29,12 @@ module.exports = {
 			endTime: { $gt: startDate },
 		}],
 	}).toArray(),
+	getByUser: (userId) => userMeetings.find({
+		$or: [
+			{ userId },
+			{ ownerId: userId },
+		],
+	}).toArray(),
+
+	getById: (id) => userMeetings.findOne({ _id: new ObjectId(id) }),
 }
