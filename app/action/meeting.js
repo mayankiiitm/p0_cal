@@ -32,6 +32,7 @@ const bookMeeting = async (req, res) => {
 		userId: req.user._id,
 		startTime: startUTC,
 		endTime: endUTC,
+		ownerId: userEvent.userId,
 	})
 	return res.send({ success: true, meetingSlot })
 }

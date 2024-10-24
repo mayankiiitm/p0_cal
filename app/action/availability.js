@@ -1,5 +1,7 @@
 const userAvailability = require('../model/userAvailability')
-const { makeSchedule } = require('./lib/schedule')
+const userMeetings = require('../model/userMeetings')
+const { makeSchedule, makeBookedSlot } = require('./lib/schedule')
+const { convertTimezone } = require('../helper/date')
 
 module.exports = {
 	create: async (req, res) => {
@@ -20,12 +22,21 @@ module.exports = {
 	},
 	get: async (req, res) => {
 		const { id } = req.params
-		const schedule = await userAvailability.getById(id)
+		const [startUTC, endUTC] = [
+			convertTimezone(req.query.startDate, req.query.timeZone, 'utc'),
+			convertTimezone(req.query.endDate, req.query.timeZone, 'utc'),
+		]
+		const [schedule, bookings] = await Promise.all([
+			userAvailability.getById(id),
+			userMeetings.getBookings(req.user._id, startUTC, endUTC),
+		])
+		const bookedSlot = makeBookedSlot(bookings)
 		const targetAvailability = makeSchedule(
 			schedule,
 			req.query.startDate,
 			req.query.endDate,
 			req.query.timeZone,
+			bookedSlot,
 		)
 		res.send({ success: true, availability: targetAvailability })
 	},

@@ -18,6 +18,78 @@ const getAvailability = (data, startDate, endDate) => {
 	return result
 }
 
+const getAvailabilityWithBooking = (data, startDate, endDate, unavailability) => {
+	const result = {}
+	const end = new Date(endDate)
+	const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+	const currentDate = new Date(startDate)
+
+	// Helper to check overlap and cut unavailable slots
+	const cutUnavailableSlots = (slotStart, slotEnd, unavailable) => {
+		let availableRanges = [{ start: slotStart, end: slotEnd }]
+
+		unavailable.forEach((unavail) => {
+			const unavailableStart = new Date(unavail.startTime)
+			const unavailableEnd = new Date(unavail.endTime)
+
+			availableRanges = availableRanges.flatMap((range) => {
+				const { start, end: newEnd } = range
+				const newRanges = []
+
+				// If the range overlaps with the unavailability
+				if (start < unavailableEnd && newEnd > unavailableStart) {
+					// If the start is before the unavailable range, keep the range before it
+					if (start < unavailableStart) {
+						newRanges.push({ start, end: unavailableStart })
+					}
+					// If the end is after the unavailable range, keep the range after it
+					if (newEnd > unavailableEnd) {
+						newRanges.push({ start: unavailableEnd, end: newEnd })
+					}
+				} else {
+					// If no overlap, keep the range as is
+					newRanges.push(range)
+				}
+
+				return newRanges
+			})
+		})
+
+		return availableRanges.map((range) => `${range.start.toTimeString().slice(0, 5)}-${range.end.toTimeString().slice(0, 5)}`)
+	}
+
+	while (currentDate <= end) {
+		const dayOfWeek = dayNames[currentDate.getDay()]
+		const formattedDate = currentDate.toISOString().split('T')[0]
+		let availableSlots = []
+
+		// Check if there are date-specific slots
+		if (data.dateSlots[formattedDate]) {
+			availableSlots = data.dateSlots[formattedDate]
+		} else if (data.weeklySlots[dayOfWeek]) {
+			availableSlots = data.weeklySlots[dayOfWeek]
+		}
+
+		const modifiedSlots = availableSlots.flatMap((slot) => {
+			const slotStart = new Date(`${formattedDate}T${slot.split('-')[0]}`)
+			const slotEnd = new Date(`${formattedDate}T${slot.split('-')[1]}`)
+
+			// Cut unavailable times from this slot
+			return cutUnavailableSlots(
+				slotStart,
+				slotEnd,
+				unavailability.filter((unavail) => unavail.startTime.startsWith(formattedDate)),
+			)
+		})
+
+		if (modifiedSlots.length > 0) {
+			result[formattedDate] = modifiedSlots
+		}
+		currentDate.setDate(currentDate.getDate() + 1)
+	}
+	return result
+}
+
 // Function to convert time slots with overflow/underflow and split handling
 // written mostly with the help of chatGPT, so might have some bugs
 const convertTimeSlots = (timeSlots, sourceTimeZone, targetTimeZone) => {
@@ -162,4 +234,5 @@ module.exports = {
 	findOverlaps,
 	convertTimezone,
 	addSecondsToTime,
+	getAvailabilityWithBooking,
 }

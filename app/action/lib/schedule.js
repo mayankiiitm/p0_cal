@@ -1,11 +1,11 @@
 const date = require('../../helper/date')
 
-const scheduleToDateSlots = (schedule, startDate, endDate, timeZone = '') => {
+const scheduleToDateSlots = (schedule, startDate, endDate, timeZone, bookedSlot) => {
 	// eslint-disable-next-line no-param-reassign
 	if (!timeZone) timeZone = schedule.timeZone
 	const start = date.convertDateWithTimeZone(startDate, schedule.timeZone, timeZone)
 	const end = date.convertDateWithTimeZone(endDate, schedule.timeZone, timeZone, 'end')
-	const dailyAvailability = date.getAvailability(schedule, start, end)
+	const dailyAvailability = date.getAvailabilityWithBooking(schedule, start, end, bookedSlot)
 	if (schedule.timeZone === timeZone) {
 		return dailyAvailability
 	}
@@ -17,12 +17,13 @@ const scheduleToDateSlots = (schedule, startDate, endDate, timeZone = '') => {
 	return targetAvailability
 }
 
-const makeSchedule = (schedule, startDate, endDate, timeZone) => {
+const makeSchedule = (schedule, startDate, endDate, timeZone, bookedSlot) => {
 	const targetAvailability = scheduleToDateSlots(
 		schedule,
 		startDate,
 		endDate,
 		timeZone,
+		bookedSlot,
 	)
 	return targetAvailability
 }
@@ -85,8 +86,20 @@ const isCorrectTime = (eventSchedule, eventSlot) => {
 	return true
 }
 
+const makeBookedSlot = (bookings, timeZone) => {
+	const bookingsTz = []
+	// eslint-disable-next-line no-restricted-syntax
+	for (const booking of bookings) {
+		const startTime = date.convertTimezone(booking.startTime, 'utc', timeZone)
+		const endTime = date.convertTimezone(booking.endTime, 'utc', timeZone)
+		bookingsTz.push({ startTime, endTime })
+	}
+	return bookingsTz
+}
+
 module.exports = {
 	makeSchedule,
 	makeMeetingSlot,
 	isCorrectTime,
+	makeBookedSlot,
 }
